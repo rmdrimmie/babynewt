@@ -1,4 +1,5 @@
 <?php
+
 if ( array_key_exists( 'btnExpireSession', $_REQUEST ) && $expireSession == '1' ) {
     // break cookies
     setcookie( "cookieUsername", FALSE, mktime(0,0,0,12,1,2015));
@@ -52,10 +53,9 @@ if ( ( !Empty( $_POST['userLoginSubmit'] ) ) || ( !Empty($_COOKIE['cookieUsernam
 
 function OutputLoginForm( $UserLoginFormAction )
 {
-    echo "<form name=\"UserLoginForm\" action=\"$UserLoginFormAction\" method=\"post\">";
-
-//  <a href="editprofile.php">Click here to register</a><br><br>
-?>
+    echo '<form name="UserLoginForm" action="', $UserLoginFormAction, '" method="post">';
+    //  <a href="editprofile.php">Click here to register</a><br><br>
+    echo <<<FORM
     <table>
         <tr>
             <td>
@@ -91,6 +91,7 @@ function OutputLoginForm( $UserLoginFormAction )
         </tr>
     </table>
     </form>
-<?php
+FORM;
 }
-?>
+
+/* end of session.php */

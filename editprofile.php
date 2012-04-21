@@ -1,11 +1,12 @@
 <?php
-include("session.php");
-include("include.php");
+
+require_once 'session.php';
+require_once 'include.php';
 
 // establish connection to MySQL database or output error message.
 $link = mysql_connect ($dbHost, $dbUser, $dbPassword);
 if (!mysql_select_db($dbName, $link)) {
-    echo mysql_errno().": ".mysql_error()."<br>";
+    echo mysql_errno() . ': ' . mysql_error() . '<br>';
 }
 
 $properties = array(
@@ -33,38 +34,38 @@ if ( Empty( $sessionUserId )) {
 }
 $hdnUserId = $sessionUserId;
 
-if ( $chkPublicEmail == "on" ) {
-    $sPublicEmail = " checked";
+if ( $chkPublicEmail == 'on' ) {
+    $sPublicEmail = ' checked';
     $iPublicEmail = 1;
 } else {
-    $sPublicEmail = "";
+    $sPublicEmail = '';
     $iPublicEmail = 0;
 }
 
 if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
     // New User Entering Profile Data, load values with empty info.
     $hdnUserId = -1;
-    $txtUsername = "";
-    $txtPassword = "";
-    $txtVerifyPassword = "";
-    $txtEmail = "";
-    $txtURL = "http://";
-    $txtDateJoined = "";
-    $txtDateLastVisit = "";
-    $txtUserNumber = "";
-    $txtGMTOffset = "0";
-    $sPublicEmail = "";
+    $txtUsername = '';
+    $txtPassword = '';
+    $txtVerifyPassword = '';
+    $txtEmail = '';
+    $txtURL = 'http://';
+    $txtDateJoined = '';
+    $txtDateLastVisit = '';
+    $txtUserNumber = '';
+    $txtGMTOffset = '0';
+    $sPublicEmail = '';
 } else if ($hdnUserId == -1 && !Empty( $btnSubmit ) ) {
     // New User Saving Profile Data.
     if ( $txtPassword != $txtVerifyPassword ) {
-        echo "Passwords do not match, please try again.<br>";
+        echo 'Passwords do not match, please try again.<br>';
     } else {
         // Check for an existing user with that username.
-        $ProfileQuery = "SELECT i_UID FROM Users ";
+        $ProfileQuery = 'SELECT i_UID FROM Users ';
         $ProfileQuery .= "WHERE vc_Username = \"$txtUsername\"";
 
         // Check for an existing user with that usernumber.
-        $UserNumberQuery = "SELECT i_UID FROM Users ";
+        $UserNumberQuery = 'SELECT i_UID FROM Users ';
         $UserNumberQuery .= "WHERE vc_UserId = \"$txtUserNumber\"";
 
         $UpdateUserQueryId = mysql_query ($ProfileQuery, $link);
@@ -74,10 +75,10 @@ if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
         $UserNumber = mysql_fetch_object($UserNumberQueryId);
 
         if ( $UserProfile && $UserProfile->i_UID > 0 ) {
-            echo ("Sorry, that username already exists.  Please pick another.<br>");
+            echo ('Sorry, that username already exists.  Please pick another.<br>');
         } else {
             if ( $UserNumber && $UserNumber->i_UID > 0 ) {
-                echo ("Sorry, that usernumber already exists.  Please pick another.<br>");
+                echo ('Sorry, that usernumber already exists.  Please pick another.<br>');
             } else {
                 $ProfileQuery = "
                     INSERT INTO Users (
@@ -104,19 +105,19 @@ if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
                 $UpdateUserQueryId = mysql_query ($ProfileQuery, $link);
 
                 if ( $UpdateUserQueryId ) {
-                    echo "Saved!";
+                    echo 'Saved!';
                 } else {
-                    echo "Error:<br>".$ProfileQuery;
-                    echo "<br>".mysql_errno().": ".mysql_error()."<br>";
+                    echo 'Error:<br>' . $ProfileQuery;
+                    echo '<br>' . mysql_errno() . ': ' . mysql_error() . '<br>';
                 }
 
-                $ProfileQuery = "SELECT MAX(i_UID) i_UID FROM Users";
+                $ProfileQuery = 'SELECT MAX(i_UID) i_UID FROM Users';
                 $UpdateUserQueryId = mysql_query ($ProfileQuery, $link);
                 if ( $UpdateUserQueryId ) {
                     $UserProfile = mysql_fetch_object($UpdateUserQueryId);
                     $hdnUserId = $UserProfile->i_UID;
                 } else {
-                    echo "User update/creation got fucked.  Bitch to Rob.";
+                    echo 'User update/creation got fucked.  Bitch to Rob.';
                 }
             }
         }
@@ -124,7 +125,7 @@ if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
 } else if ($hdnUserId > -1 && !Empty( $btnSubmit ) ) {
     // Old User Updating Profile Data
     if ( $txtPassword != $txtVerifyPassword ) {
-        echo "Passwords Do Not Match!<br>";
+        echo 'Passwords Do Not Match!<br>';
     } else if ( '' === $txtPassword || '' === $txtVerifyPassword ) {
         echo 'You must enter your password to update your profile. Sorry.';
     } else {
@@ -140,8 +141,8 @@ if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
         $UpdateUserQueryId = mysql_query ($ProfileQuery, $link);
 
         // returning user editing profile
-        $PreferencesQuery = "SELECT i_PreferenceId, vc_PreferenceName";
-        $PreferencesQuery .= " FROM Preferences ORDER BY i_PreferenceId ASC";
+        $PreferencesQuery = 'SELECT i_PreferenceId, vc_PreferenceName';
+        $PreferencesQuery .= ' FROM Preferences ORDER BY i_PreferenceId ASC';
         $PreferencesResultsId = mysql_query ($PreferencesQuery, $link);
     }
 } else {
@@ -191,11 +192,11 @@ if ( Empty( $hdnUserId ) || ( $hdnUserId == -1  && Empty( $btnSubmit )) ) {
             <input type="hidden" name="hdnUserId" value="<?php echo $hdnUserId;?>">
             <?php
                 if ( $hdnUserId == -1 ) {
-                    echo "<input type=\"text\" name=\"txtUsername\" value=\"";
+                    echo '<input type="text" name="txtUsername" value="';
                 }
                 echo $txtUsername;
                 if ( $hdnUserId == -1 ) {
-                    echo "\" maxlength=\"100\">";
+                    echo '" maxlength="100">';
                 } else {
                     echo "<input type=\"hidden\" name=\"txtUsername\" value=\"$txtUsername\">";
                 }
